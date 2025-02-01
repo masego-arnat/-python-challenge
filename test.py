@@ -4,7 +4,8 @@ import pymongo
 from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from bson import ObjectId
  
  # Initialize FastAPI  
 app = FastAPI()
@@ -12,36 +13,6 @@ app = FastAPI()
 uri = "mongodb+srv://masegoarnat:Masego1234@cluster1.f3nzl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
-
-# # Send a ping to confirm a successful connection
-# try:
-#     client.admin.command('ping')
-#     print(" You successfully connected to MongoDB!")
-#     # Access a database 
-#     db = client.python
-
-#     # Access a collection 
-#     collection = db.Wine
-    
-#     # Fetch all documents in the collection
-#     documents = collection.find()
-#     # Convert MongoDB documents to a Pandas DataFrame
-#     df = pd.DataFrame(list(documents))
-#     # Print the DataFrame
-#     print(df)
-#     # Close the connection
-#     client.close()
-
-#     # # Iterate through the documents and print them
-#     # for doc in documents:
-#     #  print("----------",doc)
-# except Exception as e:
-#     print(e)
-
-
-
-
- 
 
 
  
@@ -74,6 +45,26 @@ def fetch_all_data():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+# Endpoint to fetch a single item by ID
+@app.get("/fetch-item/{item_id}")
+def fetch_item(item_id: str):
+    try:
+        # Access the database and collection
+        db = client.python
+        collection = db.Wine
+
+        # Fetch a single document by _id
+        document = collection.find_one({"_id": ObjectId(item_id)})
+
+        # Check if the document exists
+        if document:
+            # Convert ObjectId to string (for JSON serialization)
+            document["_id"] = str(document["_id"])
+            return {"status": "success", "data": document}
+        else:
+            raise HTTPException(status_code=404, detail="Item not found")
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 # Run the FastAPI app
 if __name__ == "__main__":
     import uvicorn
