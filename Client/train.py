@@ -1,3 +1,4 @@
+import requests
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -6,11 +7,25 @@ from sklearn.neighbors import KNeighborsClassifier
 from joblib import dump
 
 # TODO: you should fetch the data from the MongoDB database
-df = pd.read_csv("wine.csv")
+
+ 
+
+ # Fetch data from the FastAPI endpoint
+response = requests.get("http://127.0.0.1:8000/fetch-all-data")
+if response.status_code == 200:
+    data = response.json()["data"]  # Extract the "data" field
+    df = pd.DataFrame(data)  # Convert to DataFrame
+    print(df)
+else:
+    print(f"Error: {response.status_code}")
+
+# df = pd.read_csv("wine.csv")
+print(df)
 
 # set the features and labels
-y = df["target"]
-X = df.drop(["id", "target"], axis=1)
+y = df["wine"]
+X = df.drop(["_id"], axis=1)
+ 
 
 # split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
