@@ -72,7 +72,21 @@ def fetch_all_data():
 #     except Exception as e:
 #         return {"status": "error", "message": str(e)}
 
- 
+@app.delete("/delete-item/{item_id}")
+async def delete_item(item_id: str):
+    try:
+        # Convert item_id to ObjectId and delete from MongoDB
+        result = test.delete_one({"_id": ObjectId(item_id)})
+
+        if result.deleted_count == 0:
+            return {"error": "No record found with the given ID"}
+
+        return {
+            "message": "Wine record deleted successfully",
+            "deleted_id": item_id
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.post("/create-item")
