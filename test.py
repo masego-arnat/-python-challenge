@@ -1,10 +1,11 @@
+from urllib import request
 import pandas as pd
 from pymongo import MongoClient
 import pymongo
 from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from bson import ObjectId
  
  # Initialize FastAPI  
@@ -13,7 +14,12 @@ app = FastAPI()
 uri = "mongodb+srv://masegoarnat:Masego1234@cluster1.f3nzl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
-
+# Connect to MongoDB
+try:
+    db = client.python
+    test = db.Wine
+except Exception as e:
+ print("exeption ------------",e)
 
  
 # Endpoint to fetch data and return as a Pandas DataFrame
@@ -45,6 +51,56 @@ def fetch_all_data():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+
+
+# # Endpoint to delete a single item by ID
+# @app.delete("/delete-item/{item_id}")
+# def delete_item(item_id: str):
+#     try:
+#         # Access the database and collection
+#         db = client.python
+#         collection = db.Wine
+
+#         # Delete the document by _id
+#         result = collection.delete_one({"_id": ObjectId(item_id)})
+
+#         # Check if the document was deleted
+#         if result.deleted_count == 1:
+#             return {"status": "success", "message": "Item deleted successfully"}
+#         else:
+#             raise HTTPException(status_code=404, detail="Item not found")
+#     except Exception as e:
+#         return {"status": "error", "message": str(e)}
+
+ 
+
+
+@app.post("/create-item")
+async def create_item(request: Request):
+    try:
+        data = await request.json()  
+        print("Received data:", data)
+
+        # Insert data into MongoDB
+        result = test.insert_one(data)
+
+        return {
+            "message": "Wine record created successfully",
+            "inserted_id": str(result.inserted_id)  # Convert ObjectId to string
+        }
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+
+
+
+
+
+
+        
 # Endpoint to fetch a single item by ID
 @app.get("/fetch-item/{item_id}")
 def fetch_item(item_id: str):
