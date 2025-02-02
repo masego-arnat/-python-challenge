@@ -1,4 +1,5 @@
 from urllib import request
+from openai import BaseModel
 import pandas as pd
 from pymongo import MongoClient
 import pymongo
@@ -21,7 +22,22 @@ try:
 except Exception as e:
  print("exeption ------------",e)
 
- 
+ # model for wine record
+class Wine(BaseModel):
+    wine: int
+    alcohol: float
+    malic_acid: float
+    ash: float
+    alcalinity_ash: float
+    mg: int
+    phenols: float
+    flavanoids: float
+    nonflavanoid_phenols: float
+    proanth: float
+    color_intensity: float
+    hue: float
+    od: float
+    proline: int
 # Endpoint to fetch data and return as a Pandas DataFrame
 @app.get("/fetch-all-data")
 def fetch_all_data():
@@ -52,25 +68,32 @@ def fetch_all_data():
         return {"status": "error", "message": str(e)}
 
 
+@app.put("/update-item/{item_id}")
+async def update_item(item_id: str, wine: Wine):
+    try:
+        # Convert item_id to ObjectId. Handle potential errors.
+        try:
+            object_id = ObjectId(item_id)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail="Invalid item ID")
 
-# # Endpoint to delete a single item by ID
-# @app.delete("/delete-item/{item_id}")
-# def delete_item(item_id: str):
-#     try:
-#         # Access the database and collection
-#         db = client.python
-#         collection = db.Wine
+        result = test.update_one(
+            {"_id": object_id},
+            {"$set": wine.model_dump()}
+        )
 
-#         # Delete the document by _id
-#         result = collection.delete_one({"_id": ObjectId(item_id)})
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="No record found with the given ID")
 
-#         # Check if the document was deleted
-#         if result.deleted_count == 1:
-#             return {"status": "success", "message": "Item deleted successfully"}
-#         else:
-#             raise HTTPException(status_code=404, detail="Item not found")
-#     except Exception as e:
-#         return {"status": "error", "message": str(e)}
+        return {
+            "message": "Wine record updated successfully",
+            "updated_id": item_id
+        }
+
+
+    except Exception as e:
+        return {"error": str(e)}  # For  unexpected exceptions
+ 
 
 @app.delete("/delete-item/{item_id}")
 async def delete_item(item_id: str):
