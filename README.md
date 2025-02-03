@@ -10,5 +10,7 @@ docker run -d --net example --name container2 < image> <br />
  <br />
  to access the API from the client you call an endpoint similar to this:  <br />
  < container-name>.example:< port>
-
+ <br />
+  <br />
+  When testing the API please let me know so I whitelist the IP address 
  
