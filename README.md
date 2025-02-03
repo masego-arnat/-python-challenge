@@ -9,6 +9,6 @@ docker run -d --net example --name container1 <image>  <br />
 docker run -d --net example --name container2 <image> <br />
  <br />
  to access the API from the client you call an endpoint similar to this:  <br />
- <container-name>.example:<port>
+ <container-name> .example:<port>
 
  
