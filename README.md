@@ -1,5 +1,6 @@
 # python-challenge  
-the client and the API have their own separate docker files 
+ 
+To create the docker containers do the following 
 
 navigate to the client folder and run this command: <br />
 
@@ -17,6 +18,9 @@ docker run -d --net example --name container2 < image> <br />
  <br />
  to access the API from the client you call an endpoint similar to this:  <br />
  < container-name>.example:< port>
+  <br />
+ example:
+ *"http://container1.example:8000/fetch-all-data"*
  <br />
   <br />
   When testing the API please let me know so I whitelist the IP address 
