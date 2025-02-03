@@ -7,20 +7,31 @@ from sklearn.neighbors import KNeighborsClassifier
 from joblib import dump
 
 # TODO: you should fetch the data from the MongoDB database
+#  this is the end point to get the data locally 
+ # # response = requests.get("http://127.0.0.1:8000/fetch-all-data")
+
+# is the end poist that accessing the api when runing in the container
+response = requests.get("http://container1.example:8000/fetch-all-data")
+
+print("Response Status Code:", response.status_code)
+
+try:
+    response_json = response.json()  # Parse JSON response
+    print("Full Response JSON:", response_json)  # Debugging step
+
+    if "data" in response_json:
+        data = response_json["data"]  # Extract the "data" field
+        df = pd.DataFrame(data)  # Convert to DataFrame
+        print(df)
+    else:
+        print("Error: 'data' key is missing in response JSON.")
+except Exception as e:
+    print(f"Error while parsing response JSON: {e}")
+    print("Raw response text:", response.text)  # Show raw text in case it's not JSON
 
  
 
- # Fetch data from the FastAPI endpoint
-response = requests.get("http://127.0.0.1:8000/fetch-all-data")
-if response.status_code == 200:
-    data = response.json()["data"]  # Extract the "data" field
-    df = pd.DataFrame(data)  # Convert to DataFrame
-    print(df)
-else:
-    print(f"Error: {response.status_code}")
-
-# df = pd.read_csv("wine.csv")
-print(df)
+ 
 
 # set the features and labels
 y = df["wine"]

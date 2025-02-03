@@ -24,3 +24,4 @@ typing-extensions==4.2.0
 uvicorn==0.18.2
 watchfiles==0.15.0
 websockets==10.3
+requests
