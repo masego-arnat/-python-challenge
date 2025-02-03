@@ -38,6 +38,7 @@ except Exception as e:
 #     od: float
 #     proline: int
 # Endpoint to fetch data and return as a Pandas DataFrame
+
 @app.get("/fetch-all-data")
 def fetch_all_data():
     try:
