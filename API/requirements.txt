@@ -9,7 +9,8 @@ joblib==1.1.0
 numpy==1.23.0
 pandas==1.4.3
 pydantic==1.9.1
-pymongo==4.1.1
+# pymongo==4.1.1
+pymongo[srv]==4.1.1
 python-dateutil==2.8.2
 python-dotenv==0.20.0
 pytz==2022.1
@@ -24,4 +25,3 @@ typing-extensions==4.2.0
 uvicorn==0.18.2
 watchfiles==0.15.0
 websockets==10.3
-openapi-core==0.16.1

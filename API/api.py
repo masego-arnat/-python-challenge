@@ -2,7 +2,6 @@ from urllib import request
 from pydantic  import BaseModel
 import pandas as pd
 from pymongo import MongoClient
-import pymongo
 from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
