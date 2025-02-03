@@ -22,22 +22,6 @@ try:
 except Exception as e:
  print("exeption ------------",e)
 
- # model for wine record
-# class Wine(BaseModel):
-#     wine: int
-#     alcohol: float
-#     malic_acid: float
-#     ash: float
-#     alcalinity_ash: float
-#     mg: int
-#     phenols: float
-#     flavanoids: float
-#     nonflavanoid_phenols: float
-#     proanth: float
-#     color_intensity: float
-#     hue: float
-#     od: float
-#     proline: int
 # Endpoint to fetch data and return as a Pandas DataFrame
 
 @app.get("/fetch-all-data")
@@ -69,31 +53,6 @@ def fetch_all_data():
         return {"status": "error", "message": str(e)}
 
 
-# @app.put("/update-item/{item_id}")
-# async def update_item(item_id: str, wine: Wine):
-#     try:
-#         # Convert item_id to ObjectId. Handle potential errors.
-#         try:
-#             object_id = ObjectId(item_id)
-#         except Exception as e:
-#             raise HTTPException(status_code=400, detail="Invalid item ID")
-
-#         result = test.update_one(
-#             {"_id": object_id},
-#             {"$set": wine.model_dump()}
-#         )
-
-#         if result.matched_count == 0:
-#             raise HTTPException(status_code=404, detail="No record found with the given ID")
-
-#         return {
-#             "message": "Wine record updated successfully",
-#             "updated_id": item_id
-#         }
-
-
-#     except Exception as e:
-#         return {"error": str(e)}  # For  unexpected exceptions
  
 
 
